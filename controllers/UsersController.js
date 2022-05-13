@@ -2,10 +2,9 @@ import dbClient from '../utils/db.js';
 import sha1 from 'sha1';
 
 const postNew = async (req, res) => {
-  let email = req.body.email;
-  console.log(email);
+  const email = req.body.email;
   const password = req.body.password;
-  
+
   if (!email) {
     return res.status(400).send({ error: 'Missing email' });
   }
