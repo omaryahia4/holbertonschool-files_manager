@@ -27,11 +27,9 @@ class UserController {
     if (!userToken) return res.status(401).send({ error: 'Unauthorized' });
     const tokenID = await redisClient.get(`auth_${userToken}`);
     if (!tokenID) return res.status(401).send({ error: 'Unauthorized' });
-
     const user = await dbClient.db
       .collection('users')
-      .findOne({ _id: ObjectId('62adbe62596031818145bddb') });
-      console.log(user, 'why')
+      .findOne({ _id: ObjectId(userToken) });
     if (!user) return res.status(401).send({ error: 'Unauthorized' });
 
     return res.status(200).send({ id: user._id, email: user.email });

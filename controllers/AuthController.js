@@ -2,6 +2,7 @@ import redisClient from '../utils/redis.js';
 import dbClient from '../utils/db.js';
 import { v4 as uuid_v4 } from 'uuid';
 import sha1 from 'sha1';
+import ObjectId from 'mongodb'
 
 class AuthController {
    static async getConnect(req, res) {
@@ -19,7 +20,8 @@ class AuthController {
       .collection('users')
       .findOne({ email: reqUserEmail, password: sha1(reqUserPass) });
     const key = `auth_${userToken}`;
-    await redisClient.set(key,  86400, USER._id.toString());
+    const ID = JSON.stringify(USER._id);
+    await redisClient.set(key, 86400, ID);
     return res
       .status(200)
       .send({ token: userToken});
@@ -27,7 +29,10 @@ class AuthController {
 
 static async getDisconnect(req, res) {
   const userToken = req.headers['x-token'];
-  if (!userToken) return res.status(401).send({ error: 'Unauthorized' });
+  const user = await dbClient.db
+  .collection('users')
+  .findOne({ _id: ObjectId(userToken) });
+  if (!user) return res.status(401).send({ error: 'Unauthorized' });
   const key = `auth_${userToken}`
   await redisClient.del(key);
   return res.status(204).send({})
