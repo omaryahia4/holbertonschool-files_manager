@@ -1,13 +1,11 @@
 import dbClient from '../utils/db.js';
 import sha1 from 'sha1';
 import redisClient from '../utils/redis.js';
-import ObjectId from 'mongodb';
 
 class UserController {
   static async postNew(req, res) {
   const email = req.body.email;
   const password = req.body.password;
-  console.log(email)
   if (!email) {
     return res.status(400).send({ error: 'Missing email' });
   }
