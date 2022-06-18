@@ -19,7 +19,7 @@ class RedisClient {
     return this.getAsync(key);
   }
 
-  async set(key, value, duration) {
+  async set(key, duration, value) {
     this.client.setex(key, duration, value);
   }
 
