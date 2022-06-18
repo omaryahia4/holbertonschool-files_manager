@@ -1,8 +1,7 @@
+import express from 'express';
 import AppController from '../controllers/AppController.js';
 import UserController from '../controllers/UsersController.js';
-import express from 'express';
-import getConnect from '../controllers/AuthController.js';
-import getDisconnect  from '../controllers/AuthController.js';
+import AuthController from '../controllers/AuthController.js';
 import bodyParser from 'body-parser';
 const jsonParser = bodyParser.json();
 
@@ -17,10 +16,10 @@ router.get('/stats', AppController.getStats);
 
 router.post('/users', jsonParser, UserController.postNew);
 
-router.get('/connect', getConnect);
+router.get('/users/me', jsonParser, UserController.getMe);
 
-router.get('/disconnect', getDisconnect);
+router.get('/connect', AuthController.getConnect);
 
-router.get('/users/me', UserController.getMe);
+router.get('/disconnect', AuthController.getDisconnect);
 
 export default router;
