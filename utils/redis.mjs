@@ -4,11 +4,9 @@ class RedisClient {
   constructor() {
     this.client = createClient();
     this.client.on('error', (error) => console.error(`Redis client error: ${error}`));
-
   }
 
-  async isAlive() {
-    await this.client.connect();
+ isAlive() {
     return this.client.isReady;
   }
 
@@ -30,12 +28,12 @@ class RedisClient {
   }
 
   async del(key) {
-    return new Promise((resolve, reject) => {
-      this.client.del(key, (err, reply) => {
-        if (err) reject(err);
-        else resolve(reply);
-      });
-    });
+    try {
+        return await this.client.del(key);
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
   }
 }
 
